@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import React, { useMemo, useState } from 'react';
 import { SafeAreaView, ScrollView, View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { computeByYueJiangShiZhi, computeByJu, type PanDisplayResult } from './src/domain/pan';
@@ -75,4 +76,3 @@ const styles = StyleSheet.create({
   input: { flex: 1, borderWidth: 1, borderColor: '#ccc', borderRadius: 6, paddingHorizontal: 8, height: 36 },
   error: { color: '#b00020' },
 });
-

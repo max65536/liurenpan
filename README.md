@@ -17,6 +17,7 @@
    - `npm init -y`
    - `npm i react react-native expo`
    - `npm i daliuren-lib`（来自 https://www.npmjs.com/package/daliuren-lib ）
+   - `npx expo install react-native-gesture-handler react-native-reanimated react-native-svg`
    - 可选：`npm i -D typescript @types/react @types/react-native`
 3. 将本仓库的 `App.tsx` 与 `src/` 目录拷贝至 Expo 项目根目录（或直接在此处继续开发并配置打包脚本）。
 4. 运行：`npx expo start`（iOS/Android/网页任一调试端）。
@@ -28,6 +29,7 @@
 - `src/domain/pan.ts`：对 `daliuren-lib` 的轻薄封装，暴露统一的计算与展示数据结构。
 - `src/components/PanResultView.tsx`：将结果以列表/网格/文本块形式渲染。
 - `src/components/TwelveGrid.tsx`：十二宫网格（巳午未申顶部、寅丑子亥底部、卯辰/酉戌两侧）。
+- `src/components/Turntable.tsx`：三层转盘（Reanimated + Gesture Handler，支持天盘/天将层独立旋转、惯性与吸附）。
 
 ## 后续计划
 - UI 网格化呈现十二宫（替代文本块）。
