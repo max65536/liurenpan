@@ -1,0 +1,21 @@
+{
+  "name": "liurenpan",
+  "private": true,
+  "scripts": {
+    "start": "expo start",
+    "web": "expo start --web",
+    "postinstall": "node scripts/patch-metro-exports.js || true && node scripts/patch-daliuren-lib.js || true"
+  },
+  "dependencies": {
+    "daliuren-lib": "^0.2.1",
+    "expo": "^53.0.20",
+    "react": "18.2.0",
+    "react-dom": "^18.2.0",
+    "react-native": "0.76.6",
+    "react-native-web": "^0.19.12"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.24",
+    "typescript": "~5.8.3"
+  }
+}
