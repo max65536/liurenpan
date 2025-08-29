@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
 import { TwelveGrid } from './TwelveGrid';
+import { Turntable } from './Turntable';
 import type { PanDisplayResult } from '../domain/pan';
 
 export function PanResultView({ result }: { result: PanDisplayResult }) {
@@ -9,6 +10,11 @@ export function PanResultView({ result }: { result: PanDisplayResult }) {
       <Text style={styles.title}>结果</Text>
       <Text>日：{result.gan}{result.zhi}（干上：{result.ganShang}） 局：{result.ju}</Text>
       <Text>课型：{result.siKeSanZhuan.kind}（{result.siKeSanZhuan.sanZhuan.join('、')}）</Text>
+
+      <Text style={styles.subtitle}>转盘</Text>
+      {result.shiZhiForJiang ? (
+        <Turntable dayGan={result.gan as any} shiZhi={result.shiZhiForJiang as any} tianpan={result.tianpan as any} />
+      ) : null}
 
       <Text style={styles.subtitle}>四课</Text>
       {result.siKePairs.map((p, i) => (

@@ -5,6 +5,9 @@ import {
   buildTianDiPanBlock,
   buildSiKeBlock,
   buildSanZhuanBlock,
+  buildPlate,
+  DIZHI_ORDER,
+  GAN_JI_GONG,
 } from 'daliuren-lib';
 
 export interface ComputePlateParams {
@@ -28,6 +31,8 @@ export interface PanDisplayResult {
   siKeSanZhuan: { kind: string; sanZhuan: [string, string, string]; note?: string };
   // 构建天将映射所用的“占时”（用于网格 UI）
   shiZhiForJiang?: DiZhi;
+  // 天盘映射（地盘宫位 -> 天盘上神）
+  tianpan: Record<DiZhi, DiZhi>;
   // 便于 UI 快速渲染的文本块
   tiandiBlock: string[]; // 12天将环形块（6行）
   sikeBlock: string[];   // 四课：上将/上神/下神（3行）
@@ -37,6 +42,7 @@ export interface PanDisplayResult {
 export function computeByYueJiangShiZhi(params: ComputePlateParams): PanDisplayResult {
   const full = computeFullPan(params);
   const tiandiBlock = buildTianDiPanBlock({ dayGan: full.gan as any, shiZhi: params.shiZhi });
+  const plate = buildPlate({ yueJiang: params.yueJiang, shiZhi: params.shiZhi });
   const sikeBlock = buildSiKeBlock(full.siKePairs as any, { dayGan: full.gan as any, shiZhi: params.shiZhi });
   const sanzhuanBlock = buildSanZhuanBlock(full.siKeSanZhuan.sanZhuan as any, { dayGan: full.gan as any, shiZhi: params.shiZhi });
   return {
@@ -47,6 +53,7 @@ export function computeByYueJiangShiZhi(params: ComputePlateParams): PanDisplayR
     siKePairs: full.siKePairs.map(p => ({ up: String(p.up), down: String(p.down) })),
     siKeSanZhuan: full.siKeSanZhuan,
     shiZhiForJiang: params.shiZhi,
+    tianpan: plate.tianpan as any,
     tiandiBlock,
     sikeBlock,
     sanzhuanBlock,
@@ -55,6 +62,16 @@ export function computeByYueJiangShiZhi(params: ComputePlateParams): PanDisplayR
 
 export function computeByJu(params: ComputeJuParams): PanDisplayResult {
   const full = computePanByJu(params.dayGanzhi, params.ju);
+  // 重建天盘：与库内 computePanByJu 同口径
+  const start = GAN_JI_GONG[full.gan as any];
+  const startIdx = DIZHI_ORDER.indexOf(start as any);
+  const curIdx = (startIdx - (params.ju - 1) + 12) % 12;
+  const delta = (curIdx - startIdx + 12) % 12;
+  const tianpan: Record<DiZhi, DiZhi> = {} as any;
+  for (let i = 0; i < 12; i++) {
+    const palace = DIZHI_ORDER[i] as any;
+    tianpan[palace] = DIZHI_ORDER[(i + delta) % 12] as any;
+  }
   // computePanByJu 不含 shiZhi，因此只构造 sike/sanzhuan（不依赖 shiZhi 的文本也可构造，但此处简化）
   const sikeBlock = buildSiKeBlock(full.siKePairs as any, { dayGan: full.gan as any, shiZhi: full.zhi as any });
   const sanzhuanBlock = buildSanZhuanBlock(full.siKeSanZhuan.sanZhuan as any, { dayGan: full.gan as any, shiZhi: full.zhi as any });
@@ -68,6 +85,7 @@ export function computeByJu(params: ComputeJuParams): PanDisplayResult {
     siKePairs: full.siKePairs.map(p => ({ up: String(p.up), down: String(p.down) })),
     siKeSanZhuan: full.siKeSanZhuan,
     shiZhiForJiang: full.zhi as any,
+    tianpan,
     tiandiBlock,
     sikeBlock,
     sanzhuanBlock,
